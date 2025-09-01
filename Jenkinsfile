@@ -1,35 +1,24 @@
-pipeline
-{
+pipeline {
     agent any
-    stages
-    {
-        stage('git checkout main')
-        {
+    stages {
+        stage('Run main branch code') {
             when {
-                    expression {
-                        BRANCH_NAME='main'
-                    }
+                expression { env.BRANCH_NAME == 'main' }
             }
-            steps
-            {
-                echo "Here I am checkingout main Branch"
-                echo "Running Hello.py file"
+            steps {
+                echo "Running code from MAIN branch"
                 powershell "python hello.py"
             }
         }
-        stage('git checkout lukesh')
-        {
+
+        stage('Run lukesh branch code') {
             when {
-                expression {
-                    BRANCH_NAME ='lukesh'
-                }
+                expression { env.BRANCH_NAME == 'lukesh' }
             }
-            steps{
-                echo "Here I am checkingout lukesh Branch"
-                echo "Running lukesh_branch.py file"
+            steps {
+                echo "Running code from LUKESH branch"
                 powershell "python lukesh_branch.py"
             }
         }
     }
-
 }
