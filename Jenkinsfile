@@ -1,19 +1,9 @@
 pipeline
 {
     agent any
-    
-    stages{
-        stage('Git Checkout')
-        {
-            steps
-            {
-                echo 'This is Git Checkout Stage'
-                git branch:'main',url:'https://github.com/lukesh-kalam/jenkins.git'
-                echo "Checked out branch: ${env.BRANCH_NAME}"
-            }
-            
-        }
-        stage('Run Code')
+    stages
+    {
+        stage('git checkout main')
         {
             when {
                     expression {
@@ -22,10 +12,24 @@ pipeline
             }
             steps
             {
-                echo 'Run Python Code'
-                powershell  'python hello.py'
+                echo "Here I am checkingout main Branch"
+                echo "Running Hello.py file"
+                powershell "python hello.py"
             }
-            
+        }
+        stage('git checkout lukesh')
+        {
+            when {
+                expression {
+                    BRANCH_NAME ='lukesh'
+                }
+            }
+            steps{
+                echo "Here I am checkingout lukesh Branch"
+                echo "Running lukesh_branch.py file"
+                powershell "python lukesh_branch.py"
+            }
         }
     }
+
 }
