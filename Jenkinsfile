@@ -10,6 +10,10 @@ pipeline {
                 powershell "python hello.py"
             }
         }
+        stage('Switch to Lukesh Branch')
+        {
+            powershell 'git switch lukesh'
+        }
 
         stage('Run lukesh branch code') {
             when {
