@@ -25,6 +25,10 @@ pipeline {
                         userRemoteConfigs: [[url: 'https://github.com/lukesh-kalam/jenkins.git']]
                     ])
                 }
+                steps {
+                echo "Running code from LUKESH branch"
+                powershell "python lukesh_branch.py"
+            }
             }
         }
 
