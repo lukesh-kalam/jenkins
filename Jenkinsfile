@@ -1,24 +1,36 @@
 pipeline {
     agent any
     stages {
-        stage('Debug Env') {
-            steps {
-                echo "Branch Name: ${env.BRANCH_NAME}"
-                echo "GIT_BRANCH: ${env.GIT_BRANCH}"
-            }
-        }
         stage('Run main branch code') {
             when {
-                expression { env.BRANCH_NAME == 'main' || env.GIT_BRANCH == 'origin/main' }
+                branch 'main'
             }
             steps {
                 echo "Running code from MAIN branch"
                 powershell "python hello.py"
             }
         }
+
+        stage('Switch to lukesh branch') {
+            when {
+                branch 'main'   // Only switch if we started from main
+            }
+            steps {
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/lukesh']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        userRemoteConfigs: [[url: 'https://github.com/lukesh-kalam/jenkins.git']]
+                    ])
+                }
+            }
+        }
+
         stage('Run lukesh branch code') {
             when {
-                expression { env.BRANCH_NAME == 'lukesh' || env.GIT_BRANCH == 'origin/lukesh' }
+                branch 'main'   // Only run if we switched from main
             }
             steps {
                 echo "Running code from LUKESH branch"
